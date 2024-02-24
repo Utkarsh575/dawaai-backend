@@ -5,8 +5,6 @@ const app = express();
 
 app.use(express.json());
 
-console.log(uuidv4());
-
 // struct Medicine : Decodable , Identifiable {
 //     var id : Int
 //     var name : String
@@ -60,6 +58,9 @@ let users = [
     password: "admin",
     medicines: [],
     familyCode: "a28f7aab",
+    name: "admin",
+    phone: "+916200402119",
+    bloodGroup: "B+",
   },
 ];
 
@@ -79,9 +80,63 @@ app.post("/register", (req, res) => {
     medicines: [],
     familyCode: "",
   });
+
+  res.send({ message: "user added successfully", status: 201 }).status(201);
 });
 
-app.post("/login", (req, res) => {});
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  let user = users.find(
+    (user) => user.name === username && user.password === password
+  );
+
+  if (!user) {
+    res.send({ message: "user not found", status: 400 }).status(400);
+  } else {
+    res
+      .send({
+        message: "user data retrieved successfully",
+        status: 200,
+        user: user,
+      })
+      .status(200);
+  }
+});
+
+app.post("/addMedicine", (req, res) => {
+  const {
+    name,
+    type,
+    strength,
+    strengthUnit,
+    Image,
+    taken,
+    toBeTaken,
+    nextDoseTime,
+    dosageType,
+    dosage,
+    quantity,
+    expiryDate,
+    startDate,
+    remindForReorder,
+    breakfast,
+    lunch,
+    dinner,
+    notifyTimes,
+  } = req.body.medicine;
+
+  const { id } = req.body.userId;
+
+  let idx = users.findIndex((user) => user.id == id);
+  users[idx][medicines].push(req.body.medicine);
+
+  console.log(users[idx]);
+
+  res
+    .send({ message: "Medicine added successfully ", status: 201 })
+    .status(201);
+});
 app.listen(3000, () => {
   console.log(`Server listening on port ${3000}`);
 });
