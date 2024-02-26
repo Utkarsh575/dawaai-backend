@@ -160,6 +160,39 @@ app.post("/getMedicineByUserId", (req, res) => {
     })
     .status(200);
 });
+
+app.post("/createFamilyCode", (req, res) => {
+  const { userId } = req.body.userId;
+  let idx = users.findIndex((user) => user.id === userId);
+  users[idx][familyCode] = uuidv4().split("-")[0];
+
+  res
+    .send({
+      message: "family group create successfully",
+      status: 201,
+      user: user[idx],
+      familyCode: user[idx][familyCode],
+    })
+    .status(201);
+});
+
+app.post("/joinFamily", (req, res) => {
+  const { userId, familyCode } = req.body;
+  let idx = users.findIndex((user) => user.id === userId);
+  users[idx][familyCode] = familyCode;
+
+  let familyGroup = [];
+  users.forEach((user, idx) => {
+    user.familyCode === familyCode ? familyGroup.push(users[idx]) : "";
+  });
+  res
+    .send({
+      message: "you have been added to family",
+      status: 200,
+      familyGroup: familyGroup,
+    })
+    .status(200);
+});
 app.listen(3000, () => {
   console.log(`Server listening on port ${3000}`);
 });
