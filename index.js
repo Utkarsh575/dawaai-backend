@@ -129,7 +129,12 @@ app.post("/addMedicine", (req, res) => {
   const { id } = req.body.userId;
 
   let idx = users.findIndex((user) => user.id == id);
-  users[idx][medicines].push(req.body.medicine);
+  let currlength = users[idx][medicines].length;
+  let med = {
+    id:currlength+1,
+...req.body.medicine
+  }
+  users[idx][medicines].push(med);
 
   console.log(users[idx]);
 
