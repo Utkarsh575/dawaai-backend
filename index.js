@@ -142,6 +142,20 @@ app.post("/addMedicine", (req, res) => {
     .send({ message: "Medicine added successfully ", status: 201 })
     .status(201);
 });
+app.post("/getMedicineByUserId", (req, res) => {
+  const { userId } = req.body;
+
+  let idx = users.findIndex((user) => user.id === userId);
+  let userMedicines = users[idx][medicines];
+
+  res
+    .send({
+      message: "fetched medicines of the user",
+      status: 200,
+      medicines: userMedicines,
+    })
+    .status(200);
+});
 app.listen(3000, () => {
   console.log(`Server listening on port ${3000}`);
 });
