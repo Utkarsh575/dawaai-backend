@@ -58,7 +58,7 @@ let users = [
     password: "admin",
     medicines: [],
     familyCode: "a28f7aab",
-    name: "admin",
+    // name: "admin",
     phone: "+916200402119",
     bloodGroup: "B+",
   },
@@ -79,16 +79,20 @@ app.post("/register", (req, res) => {
     password: req.body.password,
     medicines: [],
     familyCode: "",
+    phone: req.body.phone,
+    bloodGroup: req.body.bloodGroup,
   });
 
-  res.send({ message: "user added successfully", status: 201 }).status(201);
+  res
+    .send({ message: "user added successfully", status: 201, user: users })
+    .status(201);
 });
 
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
-
+  console.log(users);
   let user = users.find(
-    (user) => user.name === username && user.password === password
+    (user) => user.username === username && user.password === password
   );
 
   if (!user) {
@@ -131,9 +135,9 @@ app.post("/addMedicine", (req, res) => {
   let idx = users.findIndex((user) => user.id == id);
   let currlength = users[idx][medicines].length;
   let med = {
-    id:currlength+1,
-...req.body.medicine
-  }
+    id: currlength + 1,
+    ...req.body.medicine,
+  };
   users[idx][medicines].push(med);
 
   console.log(users[idx]);
